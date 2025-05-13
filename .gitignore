@@ -47,3 +47,16 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# *.xlsx raw data files
+data/raw/*.xlsx
+*.xlsx
+
+# Secret symmetric key
+secrets/master_key.bin
+
+# (Optional) ignore the entire secrets folder
+secrets/
+
+# Encrypted artefacts (if you don't want to commit them)
+data/processed/*.rds.enc
