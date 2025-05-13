@@ -10,12 +10,15 @@ library("sodium")
 # Helper that reads *one* sheet and cleans it
 ReadOneSheet <- function(path, sheet) {
     read_xlsx(path, sheet = sheet) |>
-        rename_with(~ .x |>
-            str_replace_all("[^[:alnum:]]+", "_") |>
-            str_replace_all("_+", "_") |>
-            str_replace("^_|_$", "") |>
-            str_to_lower() |>
-            make.unique(sep = "_")
+        rename_with(
+            function(x) {
+                x |>
+                    str_replace_all("[^[:alnum:]]+", "_") |>
+                    str_replace_all("_+", "_") |>
+                    str_replace("^_|_$", "") |>
+                    str_to_lower() |>
+                    make.unique(sep = "_")
+            }
         ) |>
         mutate(across(where(is.character), str_trim))
 }
@@ -60,7 +63,6 @@ EncryptRds <- function(df, target) {
     )
     unlink(temp_plain)
 }
-
 
 # ==== 4. Write encrypted artefacts ====
 
