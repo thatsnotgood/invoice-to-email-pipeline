@@ -7,7 +7,7 @@ library("sodium")
 
 # ==== 1. Import raw sheets ====
 
-# Helper that reads *one* sheet and cleans it
+# Helper that reads one sheet and cleans it
 ReadOneSheet <- function(path, sheet) {
     read_xlsx(path, sheet = sheet) |>
         rename_with(
@@ -23,7 +23,7 @@ ReadOneSheet <- function(path, sheet) {
         mutate(across(where(is.character), str_trim))
 }
 
-# Main function: loop over sheets, returns named list ====
+# Main import function: loop over sheets, returns named list
 ImportClientData <- function(
     path = Sys.getenv("CLIENT_XLSX_PATH"),
     sheets = c("metadata", "line_items")) {
@@ -42,7 +42,7 @@ line_items_df <- dfs$line_items
 
 # ==== 2. Prepare an encryption key ====
 
-# Strategy: create *once* on first run, then reuse the same key file.
+# Strategy: create once on first run, then reuse the same key file henceforth
 key_file <- "secrets/master_key.bin"
 if (!file.exists(key_file)) {
     dir.create(dirname(key_file), recursive = TRUE, showWarnings = FALSE)
@@ -51,7 +51,7 @@ if (!file.exists(key_file)) {
 
 key <- cyphr::key_sodium(readBin(key_file, "raw", 32))
 
-# ==== 3. Helper: encrypt any data‑frame to .rds.enc
+# ==== 3. Helper: encrypt any data‑frame to .rds.enc ====
 
 EncryptRds <- function(df, target) {
     temp_plain <- tempfile(fileext = ".rds")
